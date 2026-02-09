@@ -5,66 +5,83 @@ on: [push, pull_request]
 jobs:
   testsuite:
     name: Unittests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         php-version: ['8.1', '8.2', '8.3', '8.4']
 
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 1
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php-version }}
-        extensions: mbstring, json, fileinfo
-        tools: pecl
-        coverage: pcov
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, json, fileinfo
+          tools: pecl
+          coverage: pcov
 
-    - name: Composer install
-      run: |
-        if [[ ${{ matrix.prefer-lowest == 'prefer-lowest' }} ]]; then
-          composer update --prefer-lowest --prefer-stable
-        else
-          composer install
-        fi
+      - name: Composer install
+        run: |
+          if [[ ${{ matrix.prefer-lowest == 'prefer-lowest' }} ]]; then
+            composer update --prefer-stable
+          else
+            composer install
+          fi
 
-    - name: Run PHPUnit
-      run: |
-        if [[ ${{ matrix.php-version }} == '8.1' ]]; then
-          bin/phpunit --coverage-clover=coverage.xml
-        else
-          bin/phpunit
-        fi
-    - name: Code Coverage Report
-      if: success() && matrix.php-version == '8.1'
-      uses: codecov/codecov-action@v3
+      - name: Run PHPUnit
+        run: |
+          if [[ ${{ matrix.php-version }} == '8.3' ]]; then
+            bin/phpunit --coverage-clover=coverage.xml
+          else
+            bin/phpunit
+          fi
 
-  cs-stan:
-    name: Coding Standard & Static Analysis
-    runs-on: ubuntu-20.04
+      - name: Code Coverage Report
+        if: success() && matrix.php-version == '8.3'
+        uses: codecov/codecov-action@v4
+
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-24.04
 
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 1
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php-version }}
-        extensions: mbstring, json, fileinfo
-        coverage: none
-        tools: pecl
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, json, fileinfo
 
-    - name: Composer install
-      run: composer update --prefer-lowest --prefer-stable
+      - name: Composer install
+        run: composer install
 
-    - name: Run phpcs
-      run: bin/phpcs --version && bin/phpcs --report=source --standard=phpcs.xml
+      - name: Run PHPStan
+        run: bin/phpstan analyse --no-progress
 
-    - name: Run phpstan
-      run: bin/phpstan -V && bin/phpstan analyse src -l 8 --error-format=github
+  phpcs:
+    name: PHPCS
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, json, fileinfo
+
+      - name: Composer install
+        run: composer install
+
+      - name: Run PHPCS
+        run: bin/phpcs --report=source --standard=phpcs.xml
