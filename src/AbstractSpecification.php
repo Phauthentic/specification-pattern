@@ -9,7 +9,7 @@ abstract class AbstractSpecification implements SpecificationInterface
     /**
      * @inheritDoc
      */
-    abstract public function isSatisfiedBy($candidate): bool;
+    abstract public function isSatisfiedBy(mixed $candidate): bool;
 
     public function and(SpecificationInterface $other): SpecificationInterface
     {
@@ -31,8 +31,8 @@ abstract class AbstractSpecification implements SpecificationInterface
         return new OrNotSpecification($this, $other);
     }
 
-    public function not(): SpecificationInterface
+    public function not(SpecificationInterface $other): SpecificationInterface
     {
-        return new NotSpecification($this);
+        return new NotSpecification($other);
     }
 }

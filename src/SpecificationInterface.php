@@ -17,13 +17,14 @@ interface SpecificationInterface
      * @param mixed $candidate
      * @return bool
      */
-    public function isSatisfiedBy($candidate): bool;
+    public function isSatisfiedBy(mixed $candidate): bool;
     public function and(SpecificationInterface $other): SpecificationInterface;
     public function andNot(SpecificationInterface $other): SpecificationInterface;
     public function or(SpecificationInterface $other): SpecificationInterface;
     public function orNot(SpecificationInterface $other): SpecificationInterface;
+
     /**
      * Not operator
      */
-    public function not(): SpecificationInterface;
+    public function not(SpecificationInterface $other): SpecificationInterface;
 }

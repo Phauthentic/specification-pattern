@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Phauthentic\Specification;
 
+/**
+ *
+ */
 class NotSpecification extends AbstractSpecification
 {
     protected SpecificationInterface $wrapped;
