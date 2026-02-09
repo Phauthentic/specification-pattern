@@ -13,7 +13,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Phauthentic\\Specification\\": "src/"
+            "Phauthentic\\Specification\\": "src/",
+            "Phauthentic\\Specification\\Examples\\ECommerce\\": "examples/ECommerce/"
         }
     },
     "autoload-dev": {

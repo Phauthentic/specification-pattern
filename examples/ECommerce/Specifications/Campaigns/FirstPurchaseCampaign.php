@@ -1,0 +1,60 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Phauthentic\Specification\Examples\ECommerce\Specifications\Campaigns;
+
+use Phauthentic\Specification\AbstractSpecification;
+use Phauthentic\Specification\Examples\ECommerce\Models\Order;
+use Phauthentic\Specification\Examples\ECommerce\Specifications\Customer\IsNewCustomerSpecification;
+use Phauthentic\Specification\Examples\ECommerce\Specifications\Order\MinimumOrderValueSpecification;
+use Phauthentic\Specification\Examples\ECommerce\Specifications\Order\IsFirstOrderSpecification;
+use Phauthentic\Specification\Examples\ECommerce\Specifications\Product\IsNotDigitalProductSpecification;
+
+/**
+ * First Purchase Discount Campaign Specification
+ *
+ * Business Rules:
+ * - New customer (account < 30 days)
+ * - First order ever
+ * - Minimum order value $50
+ * - Excludes gift cards and digital products
+ */
+class FirstPurchaseCampaign extends AbstractSpecification
+{
+    private AbstractSpecification $specification;
+
+    public function __construct()
+    {
+        // New customer (account created within 30 days)
+        $newCustomerSpec = new IsNewCustomerSpecification(30);
+
+        // First order
+        $firstOrderSpec = new IsFirstOrderSpecification();
+
+        // Minimum order value
+        $minValueSpec = new MinimumOrderValueSpecification(50.0);
+
+        // Excludes digital products and gift cards (handled at Order level)
+        $notDigitalSpec = new IsNotDigitalProductSpecification();
+
+        // Combine specifications
+        $this->specification = $newCustomerSpec
+            ->and($firstOrderSpec)
+            ->and($minValueSpec);
+    }
+
+    public function isSatisfiedBy(mixed $candidate): bool
+    {
+        if (!$candidate instanceof Order) {
+            return false;
+        }
+
+        // Check if order contains digital products or gift cards
+        if ($candidate->hasDigitalItems() || $candidate->hasGiftCards()) {
+            return false;
+        }
+
+        return $this->specification->isSatisfiedBy($candidate);
+    }
+}

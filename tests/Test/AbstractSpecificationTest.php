@@ -11,10 +11,8 @@ use Phauthentic\Specification\NotSpecification;
 use Phauthentic\Specification\OrNotSpecification;
 use Phauthentic\Specification\OrSpecification;
 use Phauthentic\Specification\Test\Specifications\ClosureSpecification;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(AbstractSpecification::class)]
 final class AbstractSpecificationTest extends TestCase
 {
     /**
