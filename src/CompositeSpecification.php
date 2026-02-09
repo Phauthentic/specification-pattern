@@ -36,6 +36,9 @@ class CompositeSpecification extends AbstractSpecification
         $this->assertSpecifications($specifications);
     }
 
+    /**
+     * @param array<int, mixed> $specifications
+     */
     protected function assertSpecifications(array $specifications): void
     {
         foreach ($specifications as $specification) {
