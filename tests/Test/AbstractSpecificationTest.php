@@ -27,6 +27,11 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(AbstractSpecification::class)]
+#[CoversClass(AndSpecification::class)]
+#[CoversClass(AndNotSpecification::class)]
+#[CoversClass(OrSpecification::class)]
+#[CoversClass(OrNotSpecification::class)]
+#[CoversClass(NotSpecification::class)]
 final class AbstractSpecificationTest extends TestCase
 {
     /**
