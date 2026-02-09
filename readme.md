@@ -4,7 +4,7 @@
 ![phpstan Level 8](https://img.shields.io/static/v1?label=phpstan&message=Level%208&color=%3CCOLOR%3E&style=for-the-badge)
 ![License: MIT](https://img.shields.io/static/v1?label=License&message=MIT&color=%3CCOLOR%3E&style=for-the-badge)
 
-A PHP implementation of the [Specification Pattern](https://en.wikipedia.org/wiki/Specification_pattern), a pattern that is frequently used in the context of **domain-driven design**.
+A PHP implementation of the [Specification Pattern](https://en.wikipedia.org/wiki/Specification_pattern), a pattern that is frequently used in the context of **domain-driven design**. However, it is not exclusivly useful in DDD.
 
 ---
 
@@ -42,4 +42,6 @@ foreach ($invoiceCollection as $invoice) {
 
 ## License
 
-The MIT License (MIT)
+This library is under the MIT license.
+
+Copyright Florian Krämer
