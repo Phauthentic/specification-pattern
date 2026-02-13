@@ -19,26 +19,39 @@ Since a specification is an encapsulation of logic in a reusable form it is very
 * https://en.wikipedia.org/wiki/Specification_pattern
 * http://www.martinfowler.com/apsupp/spec.pdf
 
+## How to use them
+
+When using specifications with Domain-Driven Design, a common question is how to check conditions on aggregates without breaking encapsulation. There are several approaches, from delegating checks to aggregate query methods, to using read models in CQRS architectures, to pragmatic property access for simpler use cases.
+
+See [How to use Specifications](docs/How-to-use-Specifications.md) for detailed guidance and complete examples.
+
 ## Example
 
+The following example demonstrates a debt collection business rule for invoices.
+
 ```php
+// Define specifications for invoice collection rules
 $overDue = new OverDueSpecification();
 $noticeSent = new NoticeSentSpecification();
 $inCollection = new InCollectionSpecification();
 
-// Example of specification pattern logic chaining
+// Business Rule: Send to collection agency when invoice is:
+// - Past due date AND
+// - Customer has been notified AND
+// - Not already in collection
 $sendToCollection = $overDue
     ->and($noticeSent)
-    ->and($inCollection->not());
+    ->andNot($inCollection);
 
-$invoiceCollection = $service->getInvoices();
-
-foreach ($invoiceCollection as $invoice) {
+// Apply the business rule to all invoices
+foreach ($service->getInvoices() as $invoice) {
     if ($sendToCollection->isSatisfiedBy($invoice)) {
         $invoice->sendToCollection();
     }
 }
 ```
+
+Each specification encapsulates a single business rule check (e.g., `OverDueSpecification` checks if `$invoice->dueDate < now()`). The pattern allows combining these atomic rules using boolean logic (`and`, `or`, `not`, `andNot`, `orNot`) to form complex, readable business rules that can be reused and unit tested independently.
 
 ## License
 
